@@ -67,28 +67,28 @@ services:
     instance_count: 1
     instance_size_slug: basic-xxs
 
-  # Frontend Static Site
+  # Frontend Static Site using Dockerfile
   - name: frontend
+    type: static_site
     github:
       repo: aydeggy-dot/GEOINT
       branch: main
       deploy_on_push: true
     source_dir: /frontend
 
-    # Build configuration
-    build_command: npm install && npm run build
+    # Dockerfile build for static site
+    dockerfile_path: frontend/Dockerfile
 
     # Environment variables for build
     envs:
       - key: VITE_API_BASE_URL
         scope: BUILD_TIME
-        value: "https://backend-nigeria-security-ews.ondigitalocean.app/api/v1"
+        value: "https://nigeria-security-ews-tiqle.ondigitalocean.app/api/v1"
 
-    # Static site configuration
-    static_sites:
-      - name: frontend
-        build_command: npm run build
-        output_dir: dist
-        catchall_document: index.html
-        routes:
-          - path: /
+    # Output directory from Dockerfile
+    output_dir: /app/dist
+
+    # Static site routing
+    catchall_document: index.html
+    routes:
+      - path: /
