@@ -1,0 +1,94 @@
+# DigitalOcean App Platform Specification
+name: nigeria-security-ews
+region: fra
+
+# Services
+services:
+  # Backend API Service
+  - name: backend
+    github:
+      repo: aydeggy-dot/GEOINT
+      branch: main
+      deploy_on_push: true
+    source_dir: /backend
+
+    # Build configuration
+    build_command: pip install --upgrade pip && pip install -r requirements.txt
+
+    # Run configuration
+    run_command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --workers 2
+
+    # Environment variables (you'll set actual values in DO dashboard)
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: "PLACEHOLDER_POSTGRES_URL"
+
+      - key: REDIS_URL
+        scope: RUN_TIME
+        value: "PLACEHOLDER_VALKEY_URL"
+
+      - key: SECRET_KEY
+        scope: RUN_TIME
+        type: SECRET
+        value: "JXOkBs3jk0Sx_uYPWqYOtauI_ng-w6pr7_9T_mzOIyg"
+
+      - key: ENVIRONMENT
+        scope: RUN_TIME
+        value: "production"
+
+      - key: FRONTEND_URL
+        scope: RUN_TIME
+        value: "https://nigeria-security-ews.ondigitalocean.app"
+
+      - key: ALLOWED_ORIGINS
+        scope: RUN_TIME
+        value: '["https://nigeria-security-ews.ondigitalocean.app"]'
+
+      - key: JWT_ALGORITHM
+        scope: RUN_TIME
+        value: "HS256"
+
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        scope: RUN_TIME
+        value: "30"
+
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        scope: RUN_TIME
+        value: "7"
+
+    # Health check
+    health_check:
+      http_path: /api/v1/health
+      initial_delay_seconds: 10
+
+    # Resource configuration
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xxs
+
+  # Frontend Static Site
+  - name: frontend
+    github:
+      repo: aydeggy-dot/GEOINT
+      branch: main
+      deploy_on_push: true
+    source_dir: /frontend
+
+    # Build configuration
+    build_command: npm install && npm run build
+
+    # Environment variables for build
+    envs:
+      - key: VITE_API_BASE_URL
+        scope: BUILD_TIME
+        value: "https://backend-nigeria-security-ews.ondigitalocean.app/api/v1"
+
+    # Static site configuration
+    static_sites:
+      - name: frontend
+        build_command: npm run build
+        output_dir: dist
+        catchall_document: index.html
+        routes:
+          - path: /
