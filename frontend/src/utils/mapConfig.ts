@@ -166,7 +166,7 @@ export const getCurrentLocation = (): Promise<GeolocationPosition> => {
  * Check if coordinates are within Nigeria bounds
  */
 export const isInNigeria = (lng: number, lat: number): boolean => {
-  const [sw, ne] = NIGERIA_BOUNDS;
+  const [sw, ne] = NIGERIA_BOUNDS as [[number, number], [number, number]];
   return lng >= sw[0] && lng <= ne[0] && lat >= sw[1] && lat <= ne[1];
 };
 

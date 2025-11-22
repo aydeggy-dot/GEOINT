@@ -227,7 +227,7 @@ export default function IncidentMap({
             state: properties.state,
             description: properties.description,
             timestamp: properties.timestamp,
-            casualties: properties.casualties,
+            casualties: properties.casualties ?? undefined,
             verified: properties.verified,
             verification_score: properties.verification_score,
             latitude: lat,
