@@ -50,27 +50,28 @@ app.add_middleware(
 
 
 # Include routers
+# Note: /api prefix is handled by DigitalOcean App Platform ingress routing
 app.include_router(
     auth.router,
-    prefix=f"/api/{settings.API_VERSION}",
+    prefix=f"/{settings.API_VERSION}",
     tags=["authentication"]
 )
 
 app.include_router(
     incidents.router,
-    prefix=f"/api/{settings.API_VERSION}/incidents",
+    prefix=f"/{settings.API_VERSION}/incidents",
     tags=["incidents"]
 )
 
 app.include_router(
     admin.router,
-    prefix=f"/api/{settings.API_VERSION}",
+    prefix=f"/{settings.API_VERSION}",
     tags=["admin"]
 )
 
 app.include_router(
     twofa.router,
-    prefix=f"/api/{settings.API_VERSION}",
+    prefix=f"/{settings.API_VERSION}",
     tags=["2fa"]
 )
 
