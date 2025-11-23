@@ -36,8 +36,7 @@ app = FastAPI(
     title=settings.APP_NAME,
     description="Real-time security incident mapping and early warning system for Nigeria",
     version=settings.API_VERSION,
-    lifespan=lifespan,
-    redirect_slashes=False  # Disable automatic redirects for trailing slashes
+    lifespan=lifespan
 )
 
 # Configure CORS
