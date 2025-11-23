@@ -179,12 +179,12 @@ class AuditLog(Base):
         return f"<AuditLog {self.action} by user {self.user_id}>"
 
 
-class Alert(Base):
+class SystemAlert(Base):
     """
     System alerts sent to users (email/SMS)
     Tracks delivery status and engagement
     """
-    __tablename__ = "alerts"
+    __tablename__ = "system_alerts"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String(200), nullable=False)
@@ -210,4 +210,4 @@ class Alert(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
-        return f"<Alert {self.title} type={self.type}>"
+        return f"<SystemAlert {self.title} type={self.type}>"
