@@ -227,10 +227,9 @@ async def verify_incident(
     # Update incident
     incident.verified = True
     incident.verified_by = current_user.id
-    incident.verified_at = datetime.utcnow()
 
     if notes:
-        incident.admin_notes = notes
+        incident.verification_notes = notes
 
     db.commit()
     db.refresh(incident)
@@ -249,8 +248,7 @@ async def verify_incident(
     return {
         "message": "Incident verified successfully",
         "incident_id": str(incident_id),
-        "verified_by": current_user.email,
-        "verified_at": incident.verified_at.isoformat()
+        "verified_by": current_user.email
     }
 
 
@@ -280,10 +278,9 @@ async def unverify_incident(
     # Update incident
     incident.verified = False
     incident.verified_by = None
-    incident.verified_at = None
 
     if reason:
-        incident.admin_notes = f"Unverified: {reason}"
+        incident.verification_notes = f"Unverified: {reason}"
 
     db.commit()
     db.refresh(incident)

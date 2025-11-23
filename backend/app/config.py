@@ -43,8 +43,11 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15  # Short-lived access tokens
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7  # Refresh tokens valid for 7 days
 
-    # Email Service (Brevo)
+    # Email Service (Brevo or Gmail)
+    USE_GMAIL: bool = False  # Set to True to use Gmail instead of Brevo
     BREVO_API_KEY: str = ""  # Get from https://app.brevo.com/settings/keys/api
+    GMAIL_EMAIL: str = ""  # Your Gmail address
+    GMAIL_APP_PASSWORD: str = ""  # Gmail App Password (not regular password!)
     EMAIL_FROM_ADDRESS: str = "noreply@nigeriasecurity.gov.ng"
     EMAIL_FROM_NAME: str = "Nigeria Security EWS"
 

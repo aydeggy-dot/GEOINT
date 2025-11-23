@@ -1,5 +1,5 @@
 """
-Email service using Brevo (formerly Sendinblue)
+Email service using Brevo (formerly Sendinblue) or Gmail SMTP
 Handles transactional emails for authentication and notifications
 """
 import sib_api_v3_sdk
@@ -10,6 +10,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
+
+# Try to import Gmail service
+try:
+    from app.utils.email_gmail import GmailEmailService
+    GMAIL_AVAILABLE = True
+except ImportError:
+    GMAIL_AVAILABLE = False
+    logger.warning("Gmail SMTP module not available")
 
 
 class EmailService:
@@ -348,5 +356,18 @@ class EmailService:
         return self.send_email(to_email, to_name, subject, html_content, text_content)
 
 
-# Singleton instance
-email_service = EmailService()
+# Singleton instance - use Gmail if configured, otherwise Brevo
+if settings.USE_GMAIL and GMAIL_AVAILABLE:
+    if settings.GMAIL_EMAIL and settings.GMAIL_APP_PASSWORD:
+        logger.info("Using Gmail SMTP for email service")
+        email_service = GmailEmailService(
+            smtp_email=settings.GMAIL_EMAIL,
+            smtp_password=settings.GMAIL_APP_PASSWORD,
+            from_name=settings.EMAIL_FROM_NAME
+        )
+    else:
+        logger.warning("USE_GMAIL is True but credentials not set. Email functionality disabled.")
+        email_service = None
+else:
+    logger.info("Using Brevo API for email service")
+    email_service = EmailService()
