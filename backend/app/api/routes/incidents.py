@@ -39,6 +39,7 @@ from app.utils.audit import log_admin_action
 router = APIRouter()
 
 
+@router.post("", response_model=IncidentResponse, status_code=status.HTTP_201_CREATED)
 @router.post("/", response_model=IncidentResponse, status_code=status.HTTP_201_CREATED)
 async def create_incident(
     incident_data: IncidentCreate,
@@ -322,6 +323,7 @@ async def get_incident(
     return incident
 
 
+@router.get("", response_model=IncidentListResponse)
 @router.get("/", response_model=IncidentListResponse)
 async def list_incidents(
     page: int = Query(1, ge=1),
