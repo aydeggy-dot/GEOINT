@@ -447,10 +447,11 @@ async def search_nearby_incidents(
         coords = extract_coordinates_from_geometry(incident.location)
         if coords:
             inc_lon, inc_lat = coords
-            incident.longitude = inc_lon
-            incident.latitude = inc_lat
+            # Use setattr to add dynamic attributes (longitude/latitude are @property, can't set directly)
+            object.__setattr__(incident, '_longitude', inc_lon)
+            object.__setattr__(incident, '_latitude', inc_lat)
             # Calculate actual distance
-            incident.distance_km = haversine_distance(longitude, latitude, inc_lon, inc_lat)
+            object.__setattr__(incident, 'distance_km', haversine_distance(longitude, latitude, inc_lon, inc_lat))
 
     # Sort by distance
     incidents.sort(key=lambda x: getattr(x, 'distance_km', 0))
