@@ -13,7 +13,12 @@ from app.config import get_settings
 settings = get_settings()
 
 # Password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Configure bcrypt to not raise errors on password length
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto",
+    bcrypt__truncate_error=False
+)
 
 
 # ==================== Password Hashing ====================
@@ -22,18 +27,26 @@ def hash_password(password: str) -> str:
     """
     Hash a password using bcrypt
 
+    Note: bcrypt has a 72-byte limit. Passwords are truncated to 72 bytes
+    before hashing as bcrypt only uses the first 72 bytes anyway.
+
     Args:
         password: Plain text password
 
     Returns:
         str: Hashed password
     """
-    return pwd_context.hash(password)
+    # Truncate to 72 bytes (bcrypt limitation)
+    password_bytes = password.encode('utf-8')[:72]
+    return pwd_context.hash(password_bytes)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     Verify a password against its hash
+
+    Note: bcrypt has a 72-byte limit. Passwords are truncated to 72 bytes
+    before verification to match the hashing behavior.
 
     Args:
         plain_password: Plain text password to verify
@@ -42,7 +55,9 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     Returns:
         bool: True if password matches
     """
-    return pwd_context.verify(plain_password, hashed_password)
+    # Truncate to 72 bytes (bcrypt limitation)
+    password_bytes = plain_password.encode('utf-8')[:72]
+    return pwd_context.verify(password_bytes, hashed_password)
 
 
 def validate_password_strength(password: str) -> tuple[bool, Optional[str]]:
