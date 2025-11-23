@@ -7,8 +7,8 @@ import mapboxgl from 'mapbox-gl';
 import type { LngLatBoundsLike, LngLatLike } from 'mapbox-gl';
 import { SeverityLevel } from '@/types/incident';
 
-// Initialize Mapbox token from environment variable
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+// Initialize Mapbox token from environment variable with fallback
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1IjoiYXlkZWdneSIsImEiOiJjbWk4NWZrd2IwNnIzMmtzOXdiNTZtYmhxIn0.zS3UlpoCsh7jtP0yxmYVKw';
 
 if (MAPBOX_TOKEN && !MAPBOX_TOKEN.includes('placeholder')) {
   mapboxgl.accessToken = MAPBOX_TOKEN;
