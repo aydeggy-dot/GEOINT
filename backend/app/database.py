@@ -70,7 +70,11 @@ def create_spatial_indexes():
 
     with engine.connect() as conn:
         for index_sql in indexes:
-            conn.execute(text(index_sql))
+            try:
+                conn.execute(text(index_sql))
+            except Exception as e:
+                # Skip if table or column doesn't exist yet
+                print(f"Skipping index creation: {e}")
         conn.commit()
 
     print("Spatial indexes created successfully")
