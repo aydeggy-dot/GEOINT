@@ -66,8 +66,8 @@ export default function IncidentMap({
     if (!mapContainer.current || map.current) return;
 
     // Check if Mapbox token is configured
-    const token = import.meta.env.VITE_MAPBOX_TOKEN;
-    if (!token || token.includes('placeholder')) {
+    // The token is set globally in mapConfig.ts with a fallback
+    if (!mapboxgl.accessToken) {
       toast.error('Mapbox token not configured. Please add your token to .env file');
       return;
     }
