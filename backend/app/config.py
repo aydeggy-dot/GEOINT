@@ -21,6 +21,7 @@ class Settings(BaseSettings):
 
     # CORS
     ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:5173"
+    FRONTEND_URL: str = "http://localhost:5173"  # Frontend URL for email links
 
     @property
     def ALLOWED_ORIGINS_LIST(self) -> List[str]:

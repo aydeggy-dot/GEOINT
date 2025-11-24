@@ -73,8 +73,7 @@ def create_audit_log(
 
 async def get_frontend_url() -> str:
     """Get frontend URL for email links"""
-    # In production, this should come from environment variable
-    return settings.ALLOWED_ORIGINS[0] if settings.ALLOWED_ORIGINS else "http://localhost:3000"
+    return settings.FRONTEND_URL
 
 
 # ==================== Registration ====================
